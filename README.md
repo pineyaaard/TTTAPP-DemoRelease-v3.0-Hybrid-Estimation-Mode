@@ -1,6 +1,6 @@
 # 🚀 TTTAP Core Engine (CAR DAMAGES AI ESTIMATOR) - v0.3.0
 
-<video src="https://poletta.cz/video/demo.mov" controls="controls" width="100%"></video>
+**🎬 [▶️ WATCH LIVE DEMO VIDEO (Click Here to Play)](https://poletta.cz/video/demo.mov)**
 
 **🏷 Version:** 0.3.0 (Alpha MVP)  
 **⚙️ Core Model:** Gemini 3 Flash (Vision) / Gemini 3.1 Pro (Search)  
