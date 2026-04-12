@@ -44,7 +44,7 @@ const vinLimiter = rateLimit({
 });
 
 function resolveApiKey(frontendKey?: string): string {
-  return frontendKey || "AIzaSyA0JeIWMdjEsf7LzVddMPBTC02uqTh7Uvs" || "";
+  return frontendKey || "SECRET" || "";
 }
 
 function getAI(apiKey: string): GoogleGenAI {
