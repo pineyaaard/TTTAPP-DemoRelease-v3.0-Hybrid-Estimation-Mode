@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { collection, addDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
+import carModelsData from '../data/car-models.json';
 
 // ─── Firestore error handling ────────────────────────────────────────────────
 
@@ -89,6 +90,9 @@ export function BodyShop() {
   
   const [vin, setVin] = useState('');
   const [vinData, setVinData] = useState<any>(null);
+  const [manualBrand, setManualBrand] = useState('');
+const [manualModel, setManualModel] = useState('');
+const [manualYear, setManualYear] = useState('');
   const [isSearchingVin, setIsSearchingVin] = useState(false);
   const [selectedParts, setSelectedParts] = useState<Record<number, string>>({});
   const [manualPositions, setManualPositions] = useState<{name: string, cost: number}[]>([]);
@@ -490,6 +494,52 @@ export function BodyShop() {
                   )}
                 </div>
               )}
+              {/* Manual car select — always visible */}
+{!vinData?.found && (
+  <div className="mt-6 space-y-3">
+    <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+      Или выберите вручную
+    </p>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <select
+        value={manualBrand}
+        onChange={(e) => { setManualBrand(e.target.value); setManualModel(''); }}
+        className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-3 text-zinc-900 dark:text-zinc-100 font-mono text-xs"
+      >
+        <option value="">Марка</option>
+        {Object.entries(carModelsData).map(([key, brand]: [string, any]) => (
+          <option key={key} value={key}>{brand.label}</option>
+        ))}
+      </select>
+      <select
+        value={manualModel}
+        onChange={(e) => setManualModel(e.target.value)}
+        disabled={!manualBrand}
+        className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-3 text-zinc-900 dark:text-zinc-100 font-mono text-xs disabled:opacity-40"
+      >
+        <option value="">Модель</option>
+        {manualBrand && Object.entries((carModelsData as any)[manualBrand]?.models || {}).map(([key, m]: [string, any]) => (
+          <option key={key} value={key}>{m.label}</option>
+        ))}
+      </select>
+      <select
+        value={manualYear}
+        onChange={(e) => setManualYear(e.target.value)}
+        disabled={!manualModel}
+        className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-3 text-zinc-900 dark:text-zinc-100 font-mono text-xs disabled:opacity-40"
+      >
+        <option value="">Год</option>
+        {manualModel && manualBrand && (() => {
+          const m = (carModelsData as any)[manualBrand]?.models?.[manualModel];
+          if (!m) return null;
+          const years = [];
+          for (let y = m.years[1]; y >= m.years[0]; y--) years.push(y);
+          return years.map(y => <option key={y} value={y}>{y}</option>);
+        })()}
+      </select>
+    </div>
+  </div>
+)}
             </div>
 
             {/* File Upload */}
